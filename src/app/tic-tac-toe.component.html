@@ -1,0 +1,80 @@
+<div class="game-container">
+  <section class="game-card" aria-labelledby="game-title">
+    <header class="game-header">
+      <p class="eyebrow">A little friendly competition</p>
+      <h1 id="game-title">Tic Tac Toe</h1>
+      <p class="game-intro">
+        {{ mode === 'computer'
+          ? 'You are X. Try to get three in a row against the computer.'
+          : 'Take turns with a friend. X goes first.' }}
+      </p>
+    </header>
+
+    <div class="mode-selector" role="group" aria-label="Choose game mode">
+      <button
+        type="button"
+        class="mode-button"
+        [class.active]="mode === 'two-players'"
+        [attr.aria-pressed]="mode === 'two-players'"
+        (click)="setMode('two-players')"
+      >
+        Two players
+      </button>
+      <button
+        type="button"
+        class="mode-button"
+        [class.active]="mode === 'computer'"
+        [attr.aria-pressed]="mode === 'computer'"
+        (click)="setMode('computer')"
+      >
+        Play computer
+      </button>
+    </div>
+
+    <div class="game-status" aria-live="polite" aria-atomic="true">
+      @if (!winner) {
+        <span class="status-label">{{ mode === 'computer' && currentPlayer === 'O' ? 'Computer turn' : 'Current turn' }}</span>
+        <span
+          class="player-marker"
+          [class.x-mark]="currentPlayer === 'X'"
+          [class.o-mark]="currentPlayer === 'O'"
+        >{{ currentPlayer }}</span>
+        <span class="status-message">
+          {{ mode === 'computer' && currentPlayer === 'O' ? 'Computer is thinking…' : 'Player ' + currentPlayer + ', make your move' }}
+        </span>
+      } @else if (winner !== 'Draw') {
+        <span class="status-label">Game over</span>
+        <span class="player-marker" [class.x-mark]="winner === 'X'" [class.o-mark]="winner === 'O'">
+          {{ winner }}
+        </span>
+        <span class="status-message">
+          {{ mode === 'computer'
+            ? (winner === 'X' ? 'You win! &#x1F389;' : 'The computer wins. Try again!')
+            : 'Player ' + winner + ' wins! &#x1F389;' }}
+        </span>
+      } @else {
+        <span class="status-label">Game over</span>
+        <span class="player-marker draw-marker">&#x1F91D;</span>
+        <span class="status-message">It's a draw!</span>
+      }
+    </div>
+
+    <main class="board" aria-label="Tic Tac Toe board">
+      @for (square of squares; track $index) {
+        <button
+          type="button"
+          class="cell"
+          [class.x-mark]="square === 'X'"
+          [class.o-mark]="square === 'O'"
+          [disabled]="square !== null || winner !== null || (mode === 'computer' && currentPlayer === 'O')"
+          [attr.aria-label]="'Square ' + ($index + 1) + (square ? ': ' + square : ', empty')"
+          (click)="makeMove($index)"
+        >
+          {{ square }}
+        </button>
+      }
+    </main>
+
+    <button class="reset-button" type="button" (click)="newGame()">New game</button>
+  </section>
+</div>

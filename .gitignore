@@ -1,0 +1,6 @@
+.angular
+.cache
+.DS_Store
+dist
+node_modules
+out-tsc
